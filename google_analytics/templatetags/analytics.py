@@ -38,6 +38,12 @@ class AnalyticsNode(template.Node):
         self.template_name = template_name
         
     def render(self, context):
+        
+        # Respect 'Do Not Track' header
+        request = context['request']
+        if 'HTTP_DNT' in request.META and request.META['HTTP_DNT'] == '1':
+            return ''
+        
         content = ''
         if self.site:
             code_set = self.site.analytics_set.all()
